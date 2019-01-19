@@ -1,0 +1,105 @@
+Triggers:
+============================================================================
+Create or Alter   TRIGGER [dbo].[Employee_Insert]
+       ON [dbo].[Employee]
+AFTER INSERT
+AS
+BEGIN
+       SET NOCOUNT ON;
+ 
+       DECLARE @Marks1 INT,@Marks2 INT,@Marks3 INT,@Marks4 INT,@Id INT, @Total int, @Percentage float
+ 
+       SELECT @Id = INSERTED.Id, @Marks1=inserted.Marks1,@Marks2=inserted.Marks2,@Marks3=inserted.Marks3,
+	   @Marks4=inserted.Marks4
+       FROM INSERTED;
+	
+	   set @Total =@Marks1+@Marks2+@Marks3+@Marks4;
+	   set @Percentage=@Total*100/400;
+			
+       Update Employee Set Total=@Total, Percentage=@Percentage where Id=@Id
+END
+
+
+============================================================================
+============================================================================
+
+
+
+StoreProcedures
+============================================================================
+Add
+----------------------------------------------------------------------------
+Create or ALTER PROCEDURE [dbo].[SpAddEmployee]
+	(
+	@Name varchar(50),
+	@Marks1 integer,
+	@Marks2 integer,
+	@Marks3 integer,
+	@Marks4 integer
+	)
+AS
+BEGIN
+	Insert into Employee (Name,Marks1,Marks2,Marks3,Marks4) values (@Name,@Marks1,@Marks2,@Marks3,@Marks4)
+END
+
+
+============================================================================
+Update
+----------------------------------------------------------------------------
+Create or ALTER PROCEDURE [dbo].[SpUpdateEmployee]
+	(
+	@EmployeeId integer,
+	@Name varchar(50),
+	@Marks1 integer,
+	@Marks2 integer,
+	@Marks3 integer,
+	@Marks4 integer
+	)
+AS
+BEGIN
+	Update Employee Set 
+	Name=@Name,
+	Marks1=@Marks1,
+	Marks2=@Marks2,
+	Marks3=@Marks3,
+	Marks4=@Marks4
+	where 
+	Id=@EmployeeId
+END
+
+
+============================================================================
+Delete
+----------------------------------------------------------------------------
+Create or ALTER PROCEDURE [dbo].[SpDeleteEmployee]
+	(
+	@EmployeeId integer
+	)
+AS
+BEGIN
+	Delete from Employee 
+	where 
+	Id=@EmployeeId
+END
+
+
+
+============================================================================
+Select
+----------------------------------------------------------------------------
+Create or ALTER PROCEDURE [dbo].[SpSelectEmployee]
+AS
+BEGIN
+	select * from Employee
+END
+
+
+
+
+
+
+
+
+
+
+
